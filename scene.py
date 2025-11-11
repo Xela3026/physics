@@ -18,7 +18,7 @@ class Scene:
                     if obj1 == obj2:
                         continue
                     if obj1.collide_check(obj2):
-                        obj1.yvel *= -1
+                        obj1.resolve_collide(obj2)
             if obj1.affectedByGravity:
                 obj1.update(self.gravity)
             obj1.update()

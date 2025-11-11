@@ -8,9 +8,9 @@ class Circle(Entity):
         super().__init__(*args, **kwargs)
 
     def draw(self,screen):
-        screen.draw.circle(self.get_pos(),self.radius,self.colour)
+        screen.draw.circle(self.pos(),self.radius,self.colour)
     def __repr__(self):
-        return f"Circle({self.get_pos()},{self.colour},{self.radius})"
+        return f"Circle({self.pos()},{self.colour},{self.radius})"
     
 class MovingCircle(Circle):
     movable = True
@@ -28,7 +28,7 @@ class MovingCircle(Circle):
     def collide_check(self,otherEntity):
         r1 = self.radius
         r2 = otherEntity.radius
-        dist = distance(self.get_pos(),otherEntity.get_pos())
+        dist = distance(self.pos(),otherEntity.pos())
         if isinstance(otherEntity,MovingCircle):
             return dist < (r1 + r2)
         elif isinstance(otherEntity,HollowCircle):
@@ -36,9 +36,26 @@ class MovingCircle(Circle):
                 return dist + r1 > r2
             # outside circle
             return dist + r1 < r2
+    def resolve_collide(self,otherEntity):
+        if isinstance(otherEntity,HollowCircle):
+            incidence = np.array(self.vel())
+            # correction
+            self.x -= self.xvel
+            self.y -= self.yvel
+            x, y = self.pos()
+            centre_x, centre_y = otherEntity.pos()
+            # find vector between circle centres
+            # AB = OB - OA
+            reflection_line = np.array([centre_x - x, centre_y - y])
+            projection = (np.dot(incidence,reflection_line) / (np.linalg.norm(reflection_line))**2) * reflection_line
+            self.xvel, self.yvel = (2 * projection - incidence) * -1.1
+    def __repr__(self):
+        return f"MovingCircle({self.pos()},{self.colour},{self.radius},{self.vel()})"
             
 class HollowCircle(Circle):
     affectedByGravity = False
+    def __repr__(self):
+        return f"HollowCircle({self.pos()},{self.colour},{self.radius})"
 
 class OpenCircle(HollowCircle):
     def __init__(self,*args,gap=(0,0),angular_vel=0,**kwargs):

@@ -3,7 +3,7 @@ class Entity:
     def __init__(self,pos,colour):
         self.colour = colour
         self.x, self.y = pos
-    def get_pos(self):
+    def pos(self):
         return self.x, self.y
     def collide_check(self,otherEntity):
         return NotImplementedError
