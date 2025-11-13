@@ -12,9 +12,11 @@ class Vec:
         y2 = (self.y - vec.y)**2
         return np.sqrt(x2 + y2)
     def is_between(self,a1,a2):
-        angle = normalize(self.angle)
-        start = normalize(a1)
-        end = normalize(a2)
+        angle = normalise(self.angle)
+        start = normalise(a1)
+        end = normalise(a2)
+    def normalise(self):
+        return 1 / self.r * self
         return start > angle and angle > end
     def dot(self,vec):
         return self.x * vec.x + self.y * vec.y
@@ -46,5 +48,6 @@ if __name__ == "__main__":
     print(d.to_polar())
     print(a.distance_to(b))
     print(2 * d)
+    print(a.normalise())
 
 # could generalise to an n-dimensional vector

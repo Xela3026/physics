@@ -15,6 +15,7 @@ class Circle(Entity):
     
 class MovingCircle(Circle):
     movable = True
+    _ball_collisions = False
     def __init__(self,*args,initial_vel=(0,0),affectedByGravity=True,**kwargs):
         super().__init__(*args, **kwargs)
         self.xvel, self.yvel = initial_vel
@@ -29,15 +30,15 @@ class MovingCircle(Circle):
     def collide_check(self,otherEntity):
         r1 = self.radius
         r2 = otherEntity.radius
-        p1 = self.pos()
+        p1 = self.pos() # where will it be in the future
         p2 = otherEntity.pos()
         dist = p1.distance_to(p2)
-        # should also try future detection/prediction
-        if isinstance(otherEntity,MovingCircle):
+        if isinstance(otherEntity,MovingCircle) and self._ball_collisions:
             return dist < (r1 + r2)
         elif isinstance(otherEntity,HollowCircle):
-            if dist < r2: # inside circle
-                if dist + r1 < r2: # not colliding
+            if dist < r2: # inside circle (can remove this condition to keep them in circle for much longer)
+                future_dist = (p1 + self.vel()).distance_to(p2)
+                if future_dist + r1 < r2: # not colliding
                     return False
                 if not isinstance(otherEntity,OpenCircle):
                     return True
@@ -54,7 +55,15 @@ class MovingCircle(Circle):
             # AB = b - a
             reflection_line = p2 - p1
             projection = incidence.proj_onto(reflection_line)
-            self.xvel, self.yvel = -(2 * projection - incidence)
+            self.xvel, self.yvel = -1.05 * (2 * projection - incidence)
+            dist = p1.distance_to(p2)
+            overlap = dist + self.radius - otherEntity.radius
+            if overlap > 0:
+                direction = reflection_line.normalise()
+                correction = overlap * direction
+                self.x += correction.x
+                self.y += correction.y
+        return NotImplementedError
     def __repr__(self):
         return f"MovingCircle({self.pos()},{self.colour},{self.radius},{self.vel()})"
             
