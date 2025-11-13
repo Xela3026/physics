@@ -10,7 +10,7 @@ B = OpenCircle((WIDTH/2,HEIGHT/2),(0,0,0),radius=300,gap=(np.pi/3,2 * np.pi/3),a
 C = HollowCircle((WIDTH/2,HEIGHT/2),(0,0,0),radius=300)
 scene = Scene((255,255,255),0.1)
 scene.add(A)
-scene.add(C)
+scene.add(B)
 
 def update():
     scene.update()

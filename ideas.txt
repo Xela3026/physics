@@ -1,0 +1,5 @@
+square races
+circle battles (1v1)
+circle tower battles
+circle inside a circle
+double/triple pendulum

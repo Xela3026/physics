@@ -1,10 +1,11 @@
+from vec import Vec
 class Entity:
     movable = False
     def __init__(self,pos,colour):
         self.colour = colour
         self.x, self.y = pos
     def pos(self):
-        return self.x, self.y
+        return Vec(self.x,self.y)
     def collide_check(self,otherEntity):
         return NotImplementedError
     def resolve_collide(self,otherEntity):

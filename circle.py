@@ -1,4 +1,5 @@
 from entity import Entity
+from vec import Vec
 import pygame
 from utils import *
 import numpy as np
@@ -24,31 +25,36 @@ class MovingCircle(Circle):
         self.y += self.yvel
         self.x += self.xvel
     def vel(self):
-        return self.xvel, self.yvel
+        return Vec(self.xvel, self.yvel)
     def collide_check(self,otherEntity):
         r1 = self.radius
         r2 = otherEntity.radius
-        dist = distance(self.pos(),otherEntity.pos())
+        p1 = self.pos()
+        p2 = otherEntity.pos()
+        dist = p1.distance_to(p2)
+        # should also try future detection/prediction
         if isinstance(otherEntity,MovingCircle):
             return dist < (r1 + r2)
         elif isinstance(otherEntity,HollowCircle):
-            if dist < otherEntity.radius: # inside circle
-                return dist + r1 > r2
+            if dist < r2: # inside circle
+                if dist + r1 < r2: # not colliding
+                    return False
+                if not isinstance(otherEntity,OpenCircle):
+                    return True
+                start, end = otherEntity.get_gap()
+                return not ((p1-p2).is_between(start,end))
             # outside circle
             return dist + r1 < r2
     def resolve_collide(self,otherEntity):
         if isinstance(otherEntity,HollowCircle):
-            incidence = np.array(self.vel())
-            # correction
-            self.x -= self.xvel
-            self.y -= self.yvel
-            x, y = self.pos()
-            centre_x, centre_y = otherEntity.pos()
+            incidence = self.vel()
+            p1 = self.pos()
+            p2 = otherEntity.pos()
             # find vector between circle centres
-            # AB = OB - OA
-            reflection_line = np.array([centre_x - x, centre_y - y])
-            projection = (np.dot(incidence,reflection_line) / (np.linalg.norm(reflection_line))**2) * reflection_line
-            self.xvel, self.yvel = (2 * projection - incidence) * -1.1
+            # AB = b - a
+            reflection_line = p2 - p1
+            projection = incidence.proj_onto(reflection_line)
+            self.xvel, self.yvel = -(2 * projection - incidence)
     def __repr__(self):
         return f"MovingCircle({self.pos()},{self.colour},{self.radius},{self.vel()})"
             
