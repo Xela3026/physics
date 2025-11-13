@@ -37,7 +37,7 @@ class Vec:
     def __sub__(self,vec):
         return Vec(self.x - vec.x, self.y - vec.y)
     def __neg__(self):
-        return Vec(-self.x,-self.y)
+        return -1 * self
 
 if __name__ == "__main__":
     a = Vec(1,1)

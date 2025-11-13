@@ -16,15 +16,17 @@ class Circle(Entity):
 class MovingCircle(Circle):
     movable = True
     _ball_collisions = False
-    def __init__(self,*args,initial_vel=(0,0),affectedByGravity=True,**kwargs):
+    def __init__(self,*args,initial_vel=(0,0),affectedByGravity=True,collision_func=lambda self: None,**kwargs):
         super().__init__(*args, **kwargs)
         self.xvel, self.yvel = initial_vel
         self.affectedByGravity = affectedByGravity
+        self.collision_func = collision_func
     def update(self,gravity=0):
         if self.affectedByGravity:
             self.yvel += gravity
         self.y += self.yvel
         self.x += self.xvel
+        progress_colour(self.colour,0.25)
     def vel(self):
         return Vec(self.xvel, self.yvel)
     def collide_check(self,otherEntity):
@@ -55,7 +57,7 @@ class MovingCircle(Circle):
             # AB = b - a
             reflection_line = p2 - p1
             projection = incidence.proj_onto(reflection_line)
-            self.xvel, self.yvel = -1.05 * (2 * projection - incidence)
+            self.xvel, self.yvel = -1.05*(2 * projection - incidence)
             dist = p1.distance_to(p2)
             overlap = dist + self.radius - otherEntity.radius
             if overlap > 0:
@@ -63,7 +65,11 @@ class MovingCircle(Circle):
                 correction = overlap * direction
                 self.x += correction.x
                 self.y += correction.y
+            self.collision_func(self)
         return NotImplementedError
+    def draw(self,screen):
+        screen.draw.filled_circle(self.pos(),self.radius,self.colour)
+        screen.draw.circle(self.pos(),self.radius,(255,255,255))
     def __repr__(self):
         return f"MovingCircle({self.pos()},{self.colour},{self.radius},{self.vel()})"
             

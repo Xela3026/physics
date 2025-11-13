@@ -7,7 +7,7 @@ class Scene:
     def remove(self,obj):
         self._objects.remove(obj)
     def draw(self,screen):
-        screen.fill((255,255,255))
+        # screen.fill((255,255,255))
         for obj in self._objects:
             obj.draw(screen)
     def update(self):

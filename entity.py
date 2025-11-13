@@ -1,8 +1,9 @@
 from vec import Vec
+import pygame
 class Entity:
     movable = False
     def __init__(self,pos,colour):
-        self.colour = colour
+        self.colour = pygame.Color(colour)
         self.x, self.y = pos
     def pos(self):
         return Vec(self.x,self.y)
