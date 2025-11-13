@@ -1,5 +1,6 @@
 import numpy as np
 import pygame
+import random
 def normalise(angle):
     two_pi = 2 * np.pi
     normalized_angle = angle % two_pi
@@ -18,3 +19,6 @@ def cartesian_to_polar(p):
 def progress_colour(colour,change):
     h, s, v, a = colour.hsva
     colour.hsva = (h + change) % 361, s, v, a
+
+def generate_random_vel(max,min):
+    return random.uniform(-1,1), random.random()

@@ -15,6 +15,7 @@ class Vec:
         angle = normalise(self.angle)
         start = normalise(a1)
         end = normalise(a2)
+        return start > angle and angle > end
     def normalise(self):
         return 1 / self.r * self
         return start > angle and angle > end

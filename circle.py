@@ -16,11 +16,12 @@ class Circle(Entity):
 class MovingCircle(Circle):
     movable = True
     _ball_collisions = False
-    def __init__(self,*args,initial_vel=(0,0),affectedByGravity=True,collision_func=lambda self: None,**kwargs):
+    def __init__(self,*args,initial_vel=(0,0),affectedByGravity=True,collision_func=lambda self: None,escape_func=lambda self: None,**kwargs):
         super().__init__(*args, **kwargs)
         self.xvel, self.yvel = initial_vel
         self.affectedByGravity = affectedByGravity
         self.collision_func = collision_func
+        self.escape_func = escape_func
     def update(self,gravity=0):
         if self.affectedByGravity:
             self.yvel += gravity
@@ -45,7 +46,10 @@ class MovingCircle(Circle):
                 if not isinstance(otherEntity,OpenCircle):
                     return True
                 start, end = otherEntity.get_gap()
-                return not ((p1-p2).is_between(start,end))
+                if (p1-p2).is_between(start,end):
+                    self.escape_func()
+                    return False
+                return True
             # outside circle
             return dist + r1 < r2
     def resolve_collide(self,otherEntity):
@@ -57,7 +61,7 @@ class MovingCircle(Circle):
             # AB = b - a
             reflection_line = p2 - p1
             projection = incidence.proj_onto(reflection_line)
-            self.xvel, self.yvel = -1.05*(2 * projection - incidence)
+            self.xvel, self.yvel = -1.01*(2 * projection - incidence)
             dist = p1.distance_to(p2)
             overlap = dist + self.radius - otherEntity.radius
             if overlap > 0:
