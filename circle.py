@@ -27,7 +27,7 @@ class MovingCircle(Circle):
             self.yvel += gravity
         self.y += self.yvel
         self.x += self.xvel
-        progress_colour(self.colour,0.25)
+        # progress_colour(self.colour,0.25)
     def vel(self):
         return Vec(self.xvel, self.yvel)
     def collide_check(self,otherEntity):
@@ -47,7 +47,7 @@ class MovingCircle(Circle):
                     return True
                 start, end = otherEntity.get_gap()
                 if (p1-p2).is_between(start,end):
-                    self.escape_func()
+                    self.escape_func(self)
                     return False
                 return True
             # outside circle
@@ -83,18 +83,18 @@ class HollowCircle(Circle):
         return f"HollowCircle({self.pos()},{self.colour},{self.radius})"
 
 class OpenCircle(HollowCircle):
-    def __init__(self,*args,gap=(0,0),angular_vel=0,**kwargs):
-        self._start_gap, self._end_gap = gap[0], gap[1] - 2 * np.pi
+    def __init__(self,*args,start_gap=0,gap_size=0,angular_vel=0,**kwargs):
+        self._start_gap = start_gap
+        self._gap_size = gap_size
         self._angular_vel = angular_vel
         super().__init__(*args,**kwargs)
     def get_gap(self):
         # reverse to get the full major arc instead of minor arc
-        return self._end_gap, self._start_gap
+        return self._start_gap + self._gap_size, self._start_gap
     def get_angular_vel(self):
         return self._angular_vel
     def move_gap(self,angle):
-        self._end_gap += angle
-        self._start_gap += angle
+        self._start_gap = normalise(self._start_gap+angle)
     def draw(self,screen):
         r = self.radius
         top_left = (self.x - r, self.y - r)

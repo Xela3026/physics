@@ -1,5 +1,17 @@
 square races
 circle battles (1v1)
 circle tower battles
-circle inside a circle
+"guess the image"
 double/triple pendulum
+suika.gg
+
+
+circle inside a circle (done):
+    circle duplicates every time it escapes (done)
+    butterfly effect
+    sword vs duplicating balls (+ graph of num. balls)
+    growing balls
+    speeding up ball
+    duplicates on every bounce
+    "every bounce cuts a tail"
+    "can the ball escape"? (bunch of rings surrounding ball. rings can be closing in as well)

@@ -1,7 +1,9 @@
 class Scene:
-    def __init__(self,bg_colour,gravity=0):
+    def __init__(self,bg_colour,gravity=0,width=100,height=100):
         self.gravity = gravity
         self._objects = []
+        self.width = width
+        self.height = height
     def add(self,obj):
         self._objects.append(obj)
     def remove(self,obj):

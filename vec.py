@@ -12,10 +12,9 @@ class Vec:
         y2 = (self.y - vec.y)**2
         return np.sqrt(x2 + y2)
     def is_between(self,a1,a2):
+        # expects a1 and a2 to be normalised
         angle = normalise(self.angle)
-        start = normalise(a1)
-        end = normalise(a2)
-        return start > angle and angle > end
+        return a1 > angle and angle > a2
     def normalise(self):
         return 1 / self.r * self
         return start > angle and angle > end

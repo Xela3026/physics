@@ -20,5 +20,11 @@ def progress_colour(colour,change):
     h, s, v, a = colour.hsva
     colour.hsva = (h + change) % 361, s, v, a
 
+def increment_colour(colour,change):
+    h, s, v, a = colour.hsva
+    new_col = pygame.Color((0,0,0))
+    new_col.hsva = (h + change) % 361, s, v, a
+    return new_col
+
 def generate_random_vel(max,min):
     return random.uniform(-1,1), random.random()
