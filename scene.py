@@ -15,7 +15,7 @@ class Scene:
         for obj1 in self._objects:
             if obj1.movable:
                 for obj2 in self._objects:
-                    if obj1 == obj2:
+                    if obj2.movable or obj1 == obj2: # in future might want a separate "collisions" attribute to check
                         continue
                     if obj1.collide_check(obj2):
                         obj1.resolve_collide(obj2)
