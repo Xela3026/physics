@@ -4,12 +4,13 @@ class Scene:
         self._objects = []
         self.width = width
         self.height = height
+        self.colour = bg_colour
     def add(self,obj):
         self._objects.append(obj)
     def remove(self,obj):
         self._objects.remove(obj)
     def draw(self,screen):
-        screen.fill((255,255,255))
+        screen.fill(self.colour)
         for obj in self._objects:
             obj.draw(screen)
     def update(self):

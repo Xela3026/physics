@@ -5,17 +5,21 @@ from utils import *
 import numpy as np
 import pygame
 import random
+from rectangle import Rectangle
 from butterfly import *
 from duplicating import *
 
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 600
+HEIGHT = 600
 
-scene = Scene((255,255,255),0.05,WIDTH,HEIGHT)
+scene = Scene((0,0,0),0.05,WIDTH,HEIGHT)
 
 Duplicating(scene)
 
 # butterfly_effect(scene, 100,(WIDTH/2+100,HEIGHT/2),pygame.Color((255,0,0)))
+
+test = Rectangle((WIDTH/2,HEIGHT/2),(0,0,0),width=100,height=100)
+# scene.add(test)
 
 
 def update():
@@ -33,3 +37,6 @@ pgzrun.go()
 #       classes of moving circles (fibonacci, sword, unarmed etc)
 #       delta time
 #       implement numpy
+#       sparks and sound effects on collisions
+#       collidable vs movable
+#       optimisations: only check for collisions that are close. use numpy and vectorisation -> compute all resultant velocities and apply them all at once

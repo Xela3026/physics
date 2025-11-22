@@ -2,6 +2,7 @@ from vec import Vec
 import pygame
 class Entity:
     movable = False
+    collidable = False
     def __init__(self,pos,colour):
         self.colour = pygame.Color(colour)
         self.x, self.y = pos

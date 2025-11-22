@@ -27,31 +27,32 @@ class MovingCircle(Circle):
             self.yvel += gravity
         self.y += self.yvel
         self.x += self.xvel
-        # progress_colour(self.colour,0.25)
+        progress_colour(self.colour,0.25)
     def vel(self):
         return Vec(self.xvel, self.yvel)
     def collide_check(self,otherEntity):
-        r1 = self.radius
-        r2 = otherEntity.radius
-        p1 = self.pos() # where will it be in the future
-        p2 = otherEntity.pos()
-        dist = p1.distance_to(p2)
-        if isinstance(otherEntity,MovingCircle) and self._ball_collisions:
-            return dist < (r1 + r2)
-        elif isinstance(otherEntity,HollowCircle):
-            if dist < r2: # inside circle (can remove this condition to keep them in circle for much longer)
-                future_dist = (p1 + self.vel()).distance_to(p2)
-                if future_dist + r1 < r2: # not colliding
-                    return False
-                if not isinstance(otherEntity,OpenCircle):
+        if isinstance(otherEntity,Circle):
+            r1 = self.radius
+            r2 = otherEntity.radius
+            p1 = self.pos() # where will it be in the future
+            p2 = otherEntity.pos()
+            dist = p1.distance_to(p2)
+            if isinstance(otherEntity,MovingCircle) and self._ball_collisions:
+                return dist < (r1 + r2)
+            elif isinstance(otherEntity,HollowCircle):
+                if dist < r2: # inside circle (can remove this condition to keep them in circle for much longer)
+                    future_dist = (p1 + self.vel()).distance_to(p2)
+                    if future_dist + r1 < r2: # not colliding
+                        return False
+                    if not isinstance(otherEntity,OpenCircle):
+                        return True
+                    start, end = otherEntity.get_gap()
+                    if (p1-p2).is_between(start,end):
+                        self.escape_func(self)
+                        return False
                     return True
-                start, end = otherEntity.get_gap()
-                if (p1-p2).is_between(start,end):
-                    self.escape_func(self)
-                    return False
-                return True
-            # outside circle
-            return dist + r1 < r2
+                # outside circle
+                return dist + r1 < r2
     def resolve_collide(self,otherEntity):
         if isinstance(otherEntity,HollowCircle):
             incidence = self.vel()
